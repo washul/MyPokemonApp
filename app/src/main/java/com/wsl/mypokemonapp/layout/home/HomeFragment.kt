@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.wsl.domain.pokemon.model.Pokemon
 import com.wsl.mypokemonapp.R
 import com.wsl.mypokemonapp.base.viewmodel.BaseViewModelFragment
 import com.wsl.mypokemonapp.common.BaseScreenEvent
@@ -25,6 +26,7 @@ class HomeFragment : BaseViewModelFragment<FragmentHomeBinding, HomeViewModel>
     private var isSearching = false
 
     override fun subscribeToViewModel(viewModel: HomeViewModel) {
+        createAdapter()
         createRecycler()
         setUpSearchView()
 
@@ -53,10 +55,25 @@ class HomeFragment : BaseViewModelFragment<FragmentHomeBinding, HomeViewModel>
         }
     }
 
-    private fun createRecycler() {
-        listAdapter = ItemListAdapter { itemId ->
+    private fun createAdapter() {
+
+        val cardItemClick: (Int) -> Unit = {
 
         }
+
+        val onFavoriteClick: (Pokemon, Boolean) -> Unit = { pokemon, isFavorite ->
+            if (!isFavorite)
+                viewModel.setFavorite(pokemon)
+            else
+                viewModel.deleteFavorite(pokemon)
+
+        }
+
+        listAdapter = ItemListAdapter(cardItemClick, onFavoriteClick)
+    }
+
+    private fun createRecycler() {
+
         binding.root.homeItemList.apply {
             adapter = listAdapter
             layoutManager = GridLayoutManager(context, 1)

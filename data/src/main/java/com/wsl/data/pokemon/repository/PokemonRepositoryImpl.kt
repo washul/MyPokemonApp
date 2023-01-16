@@ -26,13 +26,16 @@ class PokemonRepositoryImpl(
     * Local Data Source
     * */
 
+    override suspend fun isFavoritePokemon(id: Int): Result<Failure, Boolean>
+            = pokemonLocalDataSource.isFavoritePokemon(id)
+
     override suspend fun getFavoritesPokemon(): Result<Failure, List<Pokemon>>
             = pokemonLocalDataSource.getFavoritesPokemon()
 
-    override suspend fun setFavorite(pokemon: Pokemon): Result<Failure, Boolean>
+    override suspend fun setFavorite(pokemon: Pokemon): Result<Failure, Unit>
         = pokemonLocalDataSource.setFavorite(pokemon)
 
-    override suspend fun deleteFavorite(id: Int): Result<Failure, Boolean>
+    override suspend fun deleteFavorite(id: Int): Result<Failure, Unit>
         = pokemonLocalDataSource.removeFavorite(id)
 
 }

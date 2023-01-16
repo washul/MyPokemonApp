@@ -6,9 +6,9 @@ import com.wsl.utils.Failure
 import com.wsl.utils.Result
 
 class DeleteFavoriteUseCase (private val repository: PokemonRepository):
-    ParamsUseCase<Boolean, DeleteFavoriteUseCase.Params> {
+    ParamsUseCase<Unit, DeleteFavoriteUseCase.Params> {
 
-    override suspend fun invoke(params: Params): Result<Failure, Boolean>
+    override suspend fun invoke(params: Params): Result<Failure, Unit>
             = repository.deleteFavorite(params.id)
 
     data class Params(val id: Int)

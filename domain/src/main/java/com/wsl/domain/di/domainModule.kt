@@ -9,4 +9,5 @@ val domainModule = module {
     factory { GetFavoritesPokemonUseCase(get()) }
     factory { SetFavoriteUseCase(get()) }
     factory { DeleteFavoriteUseCase(get()) }
+    factory { IsFavoriteUseCase(get()) }
 }

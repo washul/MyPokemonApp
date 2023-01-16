@@ -149,7 +149,7 @@ data class Pokemon(
     @SerializedName("sprites")
     val sprites: PokemonSprites? = null,
 
-    val isFavorite: Boolean = false
+    var isFavorite: Boolean = false
 )
 
 data class PokemonSprites(

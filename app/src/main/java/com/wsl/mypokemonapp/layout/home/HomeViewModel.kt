@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.wsl.domain.pokemon.model.NamedApiResourceList
 import com.wsl.domain.pokemon.model.Pokemon
-import com.wsl.domain.pokemon.usecases.DeleteFavoriteUseCase
-import com.wsl.domain.pokemon.usecases.GetPokemonListUseCase
-import com.wsl.domain.pokemon.usecases.GetPokemonUseCase
-import com.wsl.domain.pokemon.usecases.SetFavoriteUseCase
+import com.wsl.domain.pokemon.usecases.*
 import com.wsl.mypokemonapp.R
 import com.wsl.mypokemonapp.base.viewmodel.BaseViewModel
 import com.wsl.mypokemonapp.utils.addList
@@ -22,7 +19,8 @@ class HomeViewModel(
     private val getPokemonUseCase: GetPokemonUseCase,
     private val getPokemonListUseCase: GetPokemonListUseCase,
     private val setFavoriteUseCase: SetFavoriteUseCase,
-    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    private val isFavoriteUseCase: IsFavoriteUseCase
 ): BaseViewModel() {
 
     private val _pokemonList = MutableLiveData<List<Pokemon>>()
@@ -77,11 +75,21 @@ class HomeViewModel(
             val itemList = ArrayList<Pokemon>()
             namedApiResourceList.results.subList(offsetItemCount, limitItems).map {  resource ->
                 withContext(Dispatchers.Default){
+                    var isPokemonFavorite = false
+                    isFavoriteUseCase(
+                        IsFavoriteUseCase.Params(
+                            resource.id
+                        )
+                    )
+                        .onFailure { /*handle problem*/ }
+                        .onSuccess { isFavorite ->
+                            isPokemonFavorite = isFavorite
+                        }
                     getPokemon(resource.id.toString()) { pokemon ->
+                        pokemon.isFavorite = isPokemonFavorite
                         itemList.add(pokemon)
                     }
                 }
-
             }
 
             offsetItemCount += limitItems
@@ -128,6 +136,7 @@ class HomeViewModel(
 
     fun setFavorite(pokemon: Pokemon) {
         viewModelScope.launch {
+            pokemon.isFavorite = true
             setFavoriteUseCase(
                 SetFavoriteUseCase.Params(
                     pokemon
@@ -138,11 +147,12 @@ class HomeViewModel(
         }
     }
 
-    fun deleteFavorite(id: Int) {
+    fun deleteFavorite(pokemon: Pokemon) {
         viewModelScope.launch {
+            pokemon.isFavorite = false
             deleteFavoriteUseCase(
                 DeleteFavoriteUseCase.Params(
-                    id
+                    pokemon.id
                 )
             )
                 .onFailure { handleFailure(it) }

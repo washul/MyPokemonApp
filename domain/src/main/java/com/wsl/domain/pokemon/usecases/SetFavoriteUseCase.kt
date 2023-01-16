@@ -7,9 +7,9 @@ import com.wsl.utils.Failure
 import com.wsl.utils.Result
 
 class SetFavoriteUseCase(private val repository: PokemonRepository):
-    ParamsUseCase<Boolean, SetFavoriteUseCase.Params> {
+    ParamsUseCase<Unit, SetFavoriteUseCase.Params> {
 
-    override suspend fun invoke(params: Params): Result<Failure, Boolean>
+    override suspend fun invoke(params: Params): Result<Failure, Unit>
             = repository.setFavorite(params.pokemon)
 
     data class Params(val pokemon: Pokemon)

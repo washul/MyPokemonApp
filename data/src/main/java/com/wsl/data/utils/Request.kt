@@ -45,3 +45,17 @@ inline fun <T> Request(
         )
     }
 }
+
+fun <T> simpleRequest(
+    call: T,
+    default: T
+): Result<Failure, T> {
+    return try {
+        Result.Success(call ?: default)
+    } catch (exception: Throwable) {
+        Log.e("Network", exception.toString())
+        Result.Failure(
+            Failure.ServerError(exception)
+        )
+    }
+}

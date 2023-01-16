@@ -3,6 +3,7 @@ package com.wsl.mypokemonapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.item_cardview.view.*
 
 class ItemListAdapter(
     private val onItemClick: (id: Int) -> Unit,
-
+    private val onFavoriteClick: (id: Pokemon, isFavorite: Boolean) -> Unit
 ): ListAdapter<Pokemon, ItemListAdapter.ItemViewHolder>(
         ItemListAdapter.CustomDiffUtils()
     ) {
@@ -26,26 +27,31 @@ class ItemListAdapter(
         class ItemViewHolder(private val binding: ItemCardviewBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(item: Pokemon) = with(itemView) {
-                val path = "${item.sprites?.frontDefault}"
-                Picasso.get()
-                    .load(path)
-                    .fit()
-                    .placeholder(R.drawable.placeholder)
-                    .into(this.itemImage)
+            fun bind(item: Pokemon, onFavoriteClick: (id: Pokemon, isFavorite: Boolean) -> Unit)
+                = with(itemView) {
+                    val path = "${item.sprites?.frontDefault}"
+                    Picasso.get()
+                        .load(path)
+                        .fit()
+                        .placeholder(R.drawable.placeholder)
+                        .into(this.itemImage)
 
-                binding.itemName.text = item.name
-                binding.itemType.setStringList( item.types.map { it.type.name } )
-                binding.itemCounter.text = item.id.toString()
+                    binding.itemName.text = item.name
+                    binding.itemType.setStringList( item.types.map { it.type.name } )
+                    binding.itemCounter.text = item.id.toString()
+                    setIsFavorite(item.isFavorite)
 
-                if (item.isFavorite)
+                    binding.isFavorite.setOnClickListener {
+                        setIsFavorite(!item.isFavorite)
+                        onFavoriteClick(item, item.isFavorite)
+                    }
+            }
+
+            private fun setIsFavorite(isFavorite: Boolean) {
+                if (isFavorite)
                     binding.isFavorite.setImageResource(R.drawable.ic_favorite_24)
                 else
                     binding.isFavorite.setImageResource(R.drawable.ic_not_favorite_24)
-
-                binding.isFavorite.setOnClickListener {
-
-                }
             }
 
             private fun TextView.setStringList(listString: List<String>) {
@@ -74,7 +80,7 @@ class ItemListAdapter(
 
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
             holder.itemView.setOnClickListener { onItemClick(getItem(position).id) }
-            holder.bind(getItem(position))
+            holder.bind(getItem(position), onFavoriteClick)
         }
 
         private class CustomDiffUtils: DiffUtil.ItemCallback<Pokemon>() {
