@@ -1,0 +1,61 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdkVersion(32)
+    compileSdk 32
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 32
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    testImplementation 'junit:junit:4.13.2'
+
+    //LocalModules
+    implementation(project(":domain"))
+    implementation(project(":utils"))
+
+    //Retrofit
+    def versions_retrofit = "2.7.2"
+    api("com.squareup.retrofit2:retrofit:${versions_retrofit}")
+    implementation("com.squareup.retrofit2:converter-gson:${versions_retrofit}")
+
+    //GSON
+    def versions_gson = "2.8.7"
+    implementation("com.google.code.gson:gson:${versions_gson}")
+
+    //Coroutines
+    def versions_coroutines = "1.4.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions_coroutines}")
+
+    //Koin
+    def versions_koin = "3.1.2"
+    implementation("io.insert-koin:koin-android:${versions_koin}")
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+}
