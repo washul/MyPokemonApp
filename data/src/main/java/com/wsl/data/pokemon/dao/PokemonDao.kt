@@ -16,6 +16,6 @@ interface PokemonDao {
     suspend fun insert(vararg users: Pokemon)
 
     @Query("DELETE FROM pokemon WHERE ID == :id")
-    suspend fun delete(id: Int): List<Pokemon>
+    suspend fun delete(id: Int)
 
 }

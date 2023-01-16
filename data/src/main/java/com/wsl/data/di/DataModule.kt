@@ -7,6 +7,7 @@ import com.wsl.data.pokemon.repository.PokemonLocalDataSource
 import com.wsl.data.pokemon.repository.PokemonRepositoryImpl
 import com.wsl.domain.pokemon.repository.PokemonRepository
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -20,7 +21,7 @@ val dataModule = module {
     single { PokemonLocalDataSource(get()) }
 
     //DB
-    single { PokemonDataBase.createDBInstance(androidApplication().applicationContext) }
+    single { PokemonDataBase.getInstance(androidContext()) }
 
     //Retrofit
     factory { provideService( get(named(RETROFIT_CLIENT)) ) }

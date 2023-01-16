@@ -34,6 +34,8 @@ data class NamedApiResource(
 
     override val category by lazy { urlToCat(url) }
     override val id by lazy { urlToId(url) }
+
+
 }
 
 interface ResourceSummaryList<out T : ResourceSummary> {

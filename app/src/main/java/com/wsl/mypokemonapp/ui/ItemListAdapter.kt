@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_cardview.view.*
 
 class ItemListAdapter(
     private val onItemClick: (id: Int) -> Unit,
-    private val onFavoriteClick: (pokemon: Pokemon) -> Unit
+
 ): ListAdapter<Pokemon, ItemListAdapter.ItemViewHolder>(
         ItemListAdapter.CustomDiffUtils()
     ) {
