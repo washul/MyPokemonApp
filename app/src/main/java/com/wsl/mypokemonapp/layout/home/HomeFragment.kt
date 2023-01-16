@@ -1,12 +1,10 @@
-package com.wsl.mypokemonapp.layout
+package com.wsl.mypokemonapp.layout.home
 
 
 import android.annotation.SuppressLint
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
+import android.widget.SearchView
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -24,9 +22,11 @@ class HomeFragment : BaseViewModelFragment<FragmentHomeBinding, HomeViewModel>
     (HomeViewModel::class){
 
     private lateinit var listAdapter: ItemListAdapter
+    private var isSearching = false
 
     override fun subscribeToViewModel(viewModel: HomeViewModel) {
         createRecycler()
+        setUpSearchView()
 
         viewModel.baseScreenEvent.observe(viewLifecycleOwner) {
             when(it){
@@ -41,6 +41,10 @@ class HomeFragment : BaseViewModelFragment<FragmentHomeBinding, HomeViewModel>
         }
 
         viewModel.pokemonList.observe(viewLifecycleOwner) {
+            listAdapter.submitList(it)
+        }
+
+        viewModel.searchPokemonList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
         }
 
@@ -60,32 +64,37 @@ class HomeFragment : BaseViewModelFragment<FragmentHomeBinding, HomeViewModel>
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                if (!recyclerView.canScrollVertically(1) && newState== RecyclerView.SCROLL_STATE_IDLE){
-                    viewModel.getPokemonList()
+                if (!recyclerView.canScrollVertically(1) && newState== RecyclerView.SCROLL_STATE_IDLE && !isSearching){
+                    viewModel.createPokemonList()
                 }
             }
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-
-        val searchViewItem = menu.findItem(R.id.search_item_menu)
-        val searchView = searchViewItem.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+    private fun setUpSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                 //newText?.let { viewModel. }
+                newText?.let { text ->
+                    if (text.length > 2 ){
+                        isSearching = true
+                        viewModel.searchPokemon(text)
+                    } else if (text == "") {
+                        listAdapter.submitList(viewModel.pokemonList.value)
+                        binding.searchView.clearFocus()
+                        isSearching = false
+                    }
+                }
                 return false
             }
 
         })
     }
+
+
 
     private fun showLoading(show: Boolean ){
         binding.homeLoading.visibility = if ( show ) View.VISIBLE else View.GONE

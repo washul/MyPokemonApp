@@ -43,6 +43,11 @@ dependencies {
     def versions_gson = "2.8.7"
     implementation("com.google.code.gson:gson:${versions_gson}")
 
+    //Room
+    def room_version = "2.4.3"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
     //Koin
     def versions_koin = "3.1.2"
     implementation("io.insert-koin:koin-android:${versions_koin}")

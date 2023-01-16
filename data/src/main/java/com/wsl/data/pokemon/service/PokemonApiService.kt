@@ -20,4 +20,5 @@ interface PokemonApiService {
         @Path("id") idOrName: String
     ): Response<Pokemon>
 
+
 }

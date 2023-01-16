@@ -1,5 +1,7 @@
 package com.wsl.domain.pokemon.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class Ability(
@@ -111,23 +113,43 @@ data class NaturePokeathlonStatAffect(
     val nature: NamedApiResource
 )
 
+@Entity
 data class Pokemon(
-    @SerializedName("id") val id: Int = 0,
-    @SerializedName("name") val name: String = "",
-    @SerializedName("baseExperience") val baseExperience: Int = 0,
-    @SerializedName("height") val height: Int = 0,
-    @SerializedName("isDefault") val isDefault: Boolean = false,
-    @SerializedName("order") val order: Int = 0,
-    @SerializedName("weight") val weight: Int = 0,
-    @SerializedName("species") val species: NamedApiResource? = null,
-    @SerializedName("abilities") val abilities: List<PokemonAbility> = emptyList(),
-    @SerializedName("forms") val forms: List<NamedApiResource> = emptyList(),
-    @SerializedName("gameIndices") val gameIndices: List<VersionGameIndex> = emptyList(),
-    @SerializedName("heldItems") val heldItems: List<PokemonHeldItem> = emptyList(),
-    @SerializedName("moves") val moves: List<PokemonMove> = emptyList(),
-    @SerializedName("stats") val stats: List<PokemonStat> = emptyList(),
-    @SerializedName("types") val types: List<PokemonType> = emptyList(),
-    @SerializedName("sprites") val sprites: PokemonSprites? = null
+    @SerializedName("id")
+    @PrimaryKey
+    val id: Int = 0,
+    @SerializedName("name")
+    val name: String = "",
+    @SerializedName("baseExperience")
+    val baseExperience: Int = 0,
+    @SerializedName("height")
+    val height: Int = 0,
+    @SerializedName("isDefault")
+    val isDefault: Boolean = false,
+    @SerializedName("order")
+    val order: Int = 0,
+    @SerializedName("weight")
+    val weight: Int = 0,
+    @SerializedName("species")
+    val species: NamedApiResource? = null,
+    @SerializedName("abilities")
+    val abilities: List<PokemonAbility> = emptyList(),
+    @SerializedName("forms")
+    val forms: List<NamedApiResource> = emptyList(),
+    @SerializedName("gameIndices")
+    val gameIndices: List<VersionGameIndex> = emptyList(),
+    @SerializedName("heldItems")
+    val heldItems: List<PokemonHeldItem> = emptyList(),
+    @SerializedName("moves")
+    val moves: List<PokemonMove> = emptyList(),
+    @SerializedName("stats")
+    val stats: List<PokemonStat> = emptyList(),
+    @SerializedName("types")
+    val types: List<PokemonType> = emptyList(),
+    @SerializedName("sprites")
+    val sprites: PokemonSprites? = null,
+
+    val isFavorite: Boolean = false
 )
 
 data class PokemonSprites(

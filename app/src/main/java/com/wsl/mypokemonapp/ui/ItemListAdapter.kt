@@ -1,15 +1,9 @@
 package com.wsl.mypokemonapp.ui
 
-import android.R.color
-import android.graphics.Color
-import android.os.Build
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.BulletSpan
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +14,10 @@ import com.wsl.mypokemonapp.databinding.ItemCardviewBinding
 import kotlinx.android.synthetic.main.item_cardview.view.*
 
 
-class ItemListAdapter(private val onItemClick: (id: Int) -> Unit):
-    ListAdapter<Pokemon, ItemListAdapter.ItemViewHolder>(
+class ItemListAdapter(
+    private val onItemClick: (id: Int) -> Unit,
+    private val onFavoriteClick: (pokemon: Pokemon) -> Unit
+): ListAdapter<Pokemon, ItemListAdapter.ItemViewHolder>(
         ItemListAdapter.CustomDiffUtils()
     ) {
 
@@ -41,6 +37,15 @@ class ItemListAdapter(private val onItemClick: (id: Int) -> Unit):
                 binding.itemName.text = item.name
                 binding.itemType.setStringList( item.types.map { it.type.name } )
                 binding.itemCounter.text = item.id.toString()
+
+                if (item.isFavorite)
+                    binding.isFavorite.setImageResource(R.drawable.ic_favorite_24)
+                else
+                    binding.isFavorite.setImageResource(R.drawable.ic_not_favorite_24)
+
+                binding.isFavorite.setOnClickListener {
+
+                }
             }
 
             private fun TextView.setStringList(listString: List<String>) {
